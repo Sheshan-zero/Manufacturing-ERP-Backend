@@ -21,8 +21,50 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "INVENTORYTRANSACTION")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class InventoryTransaction {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "TRANSACTION_ID", nullable = false)
+    private Long transactionId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ITEM_ID")
+    @NotNull(message = "Item is required")
+    private Item item;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WAREHOUSE_ID")
+    private Warehouse warehouse;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EMPLOYEE_ID")
+    private Employee employee;
+
+    @Size(max = 30, message = "Transaction type must not exceed 30 characters")
+    @Column(name = "TRANSACTION_TYPE", length = 30)
+    private String transactionType;
+
+    @NotNull(message = "Quantity is required")
+    @Positive(message = "Quantity must be greater than 0")
+    @Column(name = "QUANTITY", precision = 10, scale = 2)
+    private BigDecimal quantity;
+
+    @Column(name = "TRANSACTION_DATE")
+    private LocalDateTime transactionDate;
+
+    @Size(max = 255, message = "Remarks must not exceed 255 characters")
+    @Column(name = "REMARKS", length = 255)
+    private String remarks;
 }
