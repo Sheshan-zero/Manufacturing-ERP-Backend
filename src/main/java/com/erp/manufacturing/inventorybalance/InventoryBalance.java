@@ -20,7 +20,45 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.math.BigDecimal;
 
+@Entity
+@Table(
+        name = "INVENTORYBALANCE",
+        uniqueConstraints = @UniqueConstraint(
+                name = "UK_INVENTORY_BALANCE_ITEM_WH",
+                columnNames = {"ITEM_ID", "WAREHOUSE_ID"}
+        )
+)
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class InventoryBalance {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "INVENTORY_BALANCE_ID", nullable = false)
+    private Long inventoryBalanceId;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ITEM_ID", nullable = false)
+    private Item item;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WAREHOUSE_ID", nullable = false)
+    private Warehouse warehouse;
+
+    @NotNull
+    @DecimalMin(value = "0.00", message = "Quantity on hand cannot be negative")
+    @Column(name = "QUANTITY_ON_HAND", nullable = false, precision = 12, scale = 2)
+    private BigDecimal quantityOnHand;
+
+    @Version
+    @Column(name = "VERSION")
+    private Long version;
 }
