@@ -18,8 +18,38 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "PRODUCTIONMATERIALUSAGE")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductionMaterialUsage {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USAGE_ID", nullable = false)
+    private Long usageId;
+
+    @JsonBackReference(value = "production-material-usages")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRODUCTION_ORDER_ID")
+    private ProductionOrder productionOrder;
+
+    @Column(name = "RAW_MATERIAL_ID")
+    @NotNull(message = "Raw material ID is required")
+    private Long rawMaterialId;
+
+    @NotNull(message = "Quantity used is required")
+    @Positive(message = "Quantity used must be greater than 0")
+    @Column(name = "QUANTITY_USED", precision = 10, scale = 2)
+    private BigDecimal quantityUsed;
+
+    @Column(name = "USAGE_DATE")
+    private LocalDateTime usageDate;
 }
