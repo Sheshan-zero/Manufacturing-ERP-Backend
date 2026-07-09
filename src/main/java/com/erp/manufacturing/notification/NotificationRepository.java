@@ -1,8 +1,8 @@
-package com.erp.manufacturing.employee;
+package com.erp.manufacturing.notification;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
 }
